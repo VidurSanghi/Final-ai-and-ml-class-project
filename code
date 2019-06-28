@@ -1,0 +1,36 @@
+from keras.models import Sequential
+from keras.layers import Dense
+from keras.layers import Conv2D
+import keras
+import numpy
+# fix random seed for reproducibility
+numpy.random.seed(7)
+# load pima indians dataset
+
+
+dataset = numpy.loadtxt("data/train_x.csv", delimiter="\t")
+dataset1 = numpy.loadtxt("data/train_y.csv", delimiter="\t")
+# split into input (X) and output (Y) variables
+X = dataset
+Y = dataset1
+
+# create model
+model = Sequential()
+model.add(Dense(6, input_dim=26, activation='softmax'))
+model.add(Dense(3, activation='relu'))
+# Compile model
+model.compile(loss='mean_squared_error', optimizer=keras.optimizers.Adam(lr=0.001, beta_1=.999, beta_2=0.999999, epsilon=None, decay=0.0, amsgrad=True), metrics=['accuracy'])
+# Fit the model
+model.fit(X, Y, epochs=50, batch_size=20)
+# evaluate the model
+
+with open("data/Test_x.csv", 'r') as file:
+    a=file.read()
+with open("data/Text_y.csv", 'w') as file:
+    file.write(a.replace("  ", " "))
+X = dataset
+Y = dataset1
+
+scores = model.evaluate(X, Y)
+print(scores)
+print("\n%s: %.2f%%" % (model.metrics_names[1], scores[1]*100))
